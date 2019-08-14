@@ -49,7 +49,7 @@ class TestBins(unittest.TestCase):
         self.assertEqual(bf(2), 0)
         self.assertEqual(bf(21), 5)
         self.assertEqual(bf(32), 7)
-        self.assert_(bf(33), len(bins)-2)
+        self.assertTrue(bf(33), len(bins)-2)
         
         bins = [1, 100, 1000, 10000, 10010, 10020, 10100, 10200]
         bf = binner._binFinder(bins)
@@ -67,11 +67,11 @@ class TestBins(unittest.TestCase):
         self.assertEqual(bf(0.3333), 1)
         self.assertEqual(bf(1.0/3), 2)
         self.assertEqual(bf(1.05/3), 2)
-        self.assert_(bf(100124) == len(bins)-2)
+        self.assertTrue(bf(100124) == len(bins)-2)
         
-        self.assert_(bf(-5.88) < 0)
-        self.assert_(bf(-78) < 0)
-        self.assert_(bf(200000) > len(bins)-2)
+        self.assertTrue(bf(-5.88) < 0)
+        self.assertTrue(bf(-78) < 0)
+        self.assertTrue(bf(200000) > len(bins)-2)
 
     def test_linBinFinder(self):
         bins = [0.5,  1.5,  2.5,  3.5,  4.5,  5.5]
@@ -84,11 +84,11 @@ class TestBins(unittest.TestCase):
         self.assertEqual(bf(5.5), len(bins)-2)
 
         # Test out of bounds values
-        self.assert_(bf(0.499) < 0)
-        self.assert_(bf(0) < 0)
-        self.assert_(bf(-100) < 0)
-        self.assert_(bf(6) > len(bins)-2)
-        self.assert_(bf(111) > len(bins)-2)
+        self.assertTrue(bf(0.499) < 0)
+        self.assertTrue(bf(0) < 0)
+        self.assertTrue(bf(-100) < 0)
+        self.assertTrue(bf(6) > len(bins)-2)
+        self.assertTrue(bf(111) > len(bins)-2)
 
         bins = [2.5,   7. ,  11.5,  16. ,  20.5]
         bf = binner._linBinFinder(bins)
@@ -109,12 +109,12 @@ class TestBins(unittest.TestCase):
         self.assertEqual(bf(64), len(bins)-2)        
 
         # Test out of bounds values
-        self.assert_(bf(0.999) < 0)
+        self.assertTrue(bf(0.999) < 0)
         oldErrs = numpy.seterr(all="ignore")
-        self.assert_(bf(0) < 0)
-        self.assert_(bf(-100) < 0)
+        self.assertTrue(bf(0) < 0)
+        self.assertTrue(bf(-100) < 0)
         numpy.seterr(**oldErrs)
-        self.assert_(bf(111) > len(bins)-2)
+        self.assertTrue(bf(111) > len(bins)-2)
 
         bins = [ 5, 7.5, 11.25, 16.875, 25.3125, 37.96875 ]
         bf = binner._logBinFinder(bins)
@@ -125,7 +125,7 @@ class TestBins(unittest.TestCase):
 
     def test_linlogBinFinder(self):
         # Test typical case.
-        bins = range(1, 12) + [22, 44, 88]
+        bins = list(range(1, 12)) + [22, 44, 88]
         bf = binner._linlogBinFinder(bins)
         self.assertEqual(bf(1), 0)
         self.assertEqual(bf(7), 6)
@@ -136,13 +136,13 @@ class TestBins(unittest.TestCase):
         self.assertEqual(bf(88), len(bins)-2)
         
         # Test out of bounds values
-        self.assert_(bf(0.499) < 0)
-        self.assert_(bf(0) < 0)
-        self.assert_(bf(-100) < 0)
-        self.assert_(bf(111) > len(bins)-2)
+        self.assertTrue(bf(0.499) < 0)
+        self.assertTrue(bf(0) < 0)
+        self.assertTrue(bf(-100) < 0)
+        self.assertTrue(bf(111) > len(bins)-2)
 
         # Smallest bin value > 1.
-        bins = range(6,12) + [44, 176, 704, 2816]
+        bins = list(range(6,12)) + [44, 176, 704, 2816]
         bf = binner._linlogBinFinder(bins)
         self.assertEqual(bf(6), 0)
         self.assertEqual(bf(10), 4)
@@ -154,12 +154,12 @@ class TestBins(unittest.TestCase):
         # Largest bin value < 11
         bins = [2, 3, 4, 5, 6]
         bf = binner._linlogBinFinder(bins)
-        self.assert_(bf(1) < 0)
+        self.assertTrue(bf(1) < 0)
         self.assertEqual(bf(2), 0)
         self.assertEqual(bf(4), 2)
         self.assertEqual(bf(6), 3)
-        self.assert_(bf(7) > 3)
-        self.assert_(bf(100) > 3)
+        self.assertTrue(bf(7) > 3)
+        self.assertTrue(bf(100) > 3)
 
     def test_conformity(self):
         """ The general binary search in the base class binFinder
@@ -203,7 +203,7 @@ class TestBins(unittest.TestCase):
         b = binner.Bins(int, 1, 10, 'lin', N_bin)
         self.assertEqual(len(b), N_bin)
         self.assertEqual(b.widths.tolist(), [1]*N_bin)
-        self.assertEqual(b.centers.tolist(), range(1,11))
+        self.assertEqual(b.centers.tolist(), list(range(1,11)))
 
         N_bin = 25
         b = binner.Bins(int, 26, 75, 'lin', N_bin)
@@ -234,7 +234,7 @@ class TestBins(unittest.TestCase):
     def test_Linlogbins_int(self):
         b = binner.Bins(int, 7, 12, 'linlog', 2)
         exp_bins = (7, 8, 9, 10, 11, 22)
-	self.assertEqual(b.bin_limits, exp_bins)
+        self.assertEqual(b.bin_limits, exp_bins)
         exp_widths = [1,1,1,1,12]
         self.assertEqual(b.widths.tolist(), exp_widths)
         exp_centers = [7, 8, 9, 10, (22+11)/2.0]
@@ -259,7 +259,7 @@ class TestBins(unittest.TestCase):
     def test_Linlogbins_float(self):
         b = binner.Bins(float, 7, 12, 'linlog', 2)
         exp_bins = (7, 8, 9, 10, 11, 22)
-	self.assertEqual(b.bin_limits, exp_bins)
+        self.assertEqual(b.bin_limits, exp_bins)
         exp_widths = [1,1,1,1,11]
         self.assertEqual(b.widths.tolist(), exp_widths)
         exp_centers = [7.5, 8.5, 9.5, 10.5, (22+11)/2.0]
@@ -273,10 +273,10 @@ class TestBins(unittest.TestCase):
         minValue = 1
         maxValue = 20
         b = binner.Bins(int, minValue, maxValue, 'maxlog')
-        self.assert_(b.bin_limits[0] == minValue)
-        self.assert_(b.bin_limits[-1] == maxValue)
+        self.assertTrue(b.bin_limits[0] == minValue)
+        self.assertTrue(b.bin_limits[-1] == maxValue)
         for w in b.widths:
-            self.assert_(w >= 1)
+            self.assertTrue(w >= 1)
 
     def test_custom_bins(self):
         """Test arbitrary bins."""
@@ -322,7 +322,7 @@ class TestBins(unittest.TestCase):
         self.assertRaises(binner.BinLimitError, self.bins.bin_sum, self.bad_data_B)
 
         # Make sure numpy arrays work as promised.
-        binned_data = self.bins.bin_sum(numpy.array(self.data))
+        binned_data = self.bins.bin_sum(numpy.array(list(self.data)))
         self.assertEqual(binned_data.tolist(), expected_result)
 
         # Check exceptions
@@ -565,22 +565,22 @@ class TestBins2D(unittest.TestCase):
         input = [1,2,3,4]
         exp_output = [1./10, 2./10, 3./10, 4./10]
         act_output = binner.normalize(input)
-        self.assert_(isinstance(act_output, type(input)))
+        self.assertTrue(isinstance(act_output, type(input)))
         self.assertEqual(act_output, exp_output)
 
         # Test with a tuple.
         input = (1,2,3,4)
         exp_output = (1./10, 2./10, 3./10, 4./10)
         act_output = binner.normalize(input)
-        self.assert_(isinstance(act_output, type(input)))
+        self.assertTrue(isinstance(act_output, type(input)))
         self.assertEqual(act_output, exp_output)
 
         # Test with a numpy array.
         input = numpy.array([1,2,3,4])
         exp_output = numpy.array([1./10, 2./10, 3./10, 4./10])
         act_output = binner.normalize(input)
-        self.assert_(isinstance(act_output, type(input)))
-        self.assert_((act_output == exp_output).all())
+        self.assertTrue(isinstance(act_output, type(input)))
+        self.assertTrue((act_output == exp_output).all())
 
         # Test with a masked array.
         x = numpy.array([1,2,3,4])
@@ -588,9 +588,9 @@ class TestBins2D(unittest.TestCase):
         y = numpy.array([0, 0, 3./7, 4./7])
         exp_output = numpy.ma.masked_array(y, y < 2.5/7)
         act_output = binner.normalize(input)
-        self.assert_(isinstance(act_output, type(input)))
-        self.assert_(numpy.ma.equal(act_output, exp_output).all())
-        self.assert_((act_output.mask == exp_output.mask).all())
+        self.assertTrue(isinstance(act_output, type(input)))
+        self.assertTrue(numpy.ma.equal(act_output, exp_output).all())
+        self.assertTrue((act_output.mask == exp_output.mask).all())
 
 if __name__ == '__main__':
     # The if-clause below exists only for debugging; it makes it
