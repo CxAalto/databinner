@@ -32,7 +32,7 @@ from __future__ import print_function
 from math import ceil, floor, sqrt
 from operator import itemgetter
 import numpy as np
-from verkko.misc import data_utils
+from misc import percentile
 
 
 class Error(Exception):
@@ -1125,7 +1125,7 @@ class Bins(object):
                 # turned into a nan by numpy.
                 for i_p, p in enumerate(perc):
                     perc_arrays[i_p].mask[curr_bin] = False
-                    perc_arrays[i_p][curr_bin] = data_utils.percentile(
+                    perc_arrays[i_p][curr_bin] = percentile(
                         binElements[curr_bin], p)
 
         bp_gen = bin_percentile_gen(perc)
