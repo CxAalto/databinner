@@ -12,16 +12,16 @@ class TestBins(unittest.TestCase):
         self.weights = [7.5,   2,   4,  3, 100, 0.1, 0.9,  2,  3]
         self.coords =  [ 20,   5,   5, 10,  16,   7,   7, 11, 12]
         self.values =  [ 10, 0.5, 3.5,  1, 1.6, 100,   2, 10, 20]
-        self.data = zip(self.coords, self.values)
-        self.weighted_data = zip(self.coords, self.values, self.weights)
+        self.data = list(zip(self.coords, self.values))
+        self.weighted_data = list(zip(self.coords, self.values, self.weights))
 
         # Construct bad data
         self.bad_coords_A = [20,   -1,   5, 10,  16,   7,   7, 11, 12]
         self.bad_coords_B = [20,   2,   5, 10,  30,   7,   7, 11, 12]
-        self.bad_data_A = zip(self.bad_coords_A, self.values)
-        self.bad_data_B = zip(self.bad_coords_B, self.values)
-        self.bad_wdata_A = zip(self.bad_coords_A, self.values, self.weights)
-        self.bad_wdata_B = zip(self.bad_coords_B, self.values, self.weights)
+        self.bad_data_A = list(zip(self.bad_coords_A, self.values))
+        self.bad_data_B = list(zip(self.bad_coords_B, self.values))
+        self.bad_wdata_A = list(zip(self.bad_coords_A, self.values, self.weights))
+        self.bad_wdata_B = list(zip(self.bad_coords_B, self.values, self.weights))
         
         self.bins = binner.Bins(int, 0, 20, 'lin', 10)
         
@@ -386,7 +386,7 @@ class TestBins(unittest.TestCase):
 
     def test_Median(self):
         # Check correct result
-        new_data = zip(self.coords + [4,11], self.values + [1,30])
+        new_data = list(zip(self.coords + [4,11], self.values + [1,30]))
         binned_data = self.bins.bin_median(new_data)
         expected_result = [None,None,1,51,None,10,20,None,1.6,10]
         self.assertEqual(binned_data.tolist(), expected_result)
@@ -428,18 +428,18 @@ class TestBins2D(unittest.TestCase):
         values = [1, 3, 7, 5, 6, 3, 1, 10]
         weights = [1, 3, 1, 0, 100, 0, 1, 10]
 
-        self.coords = zip(self.x_coords, self.y_coords)
-        self.data = zip(self.x_coords, self.y_coords, values)
-        self.weighted_data = zip(self.x_coords, self.y_coords, values, weights)
+        self.coords = list(zip(self.x_coords, self.y_coords))
+        self.data = list(zip(self.x_coords, self.y_coords, values))
+        self.weighted_data = list(zip(self.x_coords, self.y_coords, values, weights))
 
         bad_x_coords = [1, 1, 2, 4, 4, 5, 1, 2]
         bad_y_coords = [1, 4, 0, 5, 6, 1, 8, 6]
-        self.bad_coords_A = zip(bad_x_coords, self.y_coords)
-        self.bad_coords_B = zip(self.x_coords, bad_y_coords)
-        self.bad_data_A = zip(bad_x_coords, self.y_coords, values)
-        self.bad_data_B = zip(self.x_coords, bad_y_coords, values) 
-        self.bad_wdata_A = zip(bad_x_coords, self.y_coords, values, weights)
-        self.bad_wdata_B = zip(self.x_coords, bad_y_coords, values, weights) 
+        self.bad_coords_A = list(zip(bad_x_coords, self.y_coords))
+        self.bad_coords_B = list(zip(self.x_coords, bad_y_coords))
+        self.bad_data_A = list(zip(bad_x_coords, self.y_coords, values))
+        self.bad_data_B = list(zip(self.x_coords, bad_y_coords, values))
+        self.bad_wdata_A = list(zip(bad_x_coords, self.y_coords, values, weights))
+        self.bad_wdata_B = list(zip(self.x_coords, bad_y_coords, values, weights))
 
         self.bins = binner.Bins2D(int, 0, 0, 'custom', [1, 1.5, 4],
                                   int, 0, 0, 'custom', [1, 4.5, 5.5, 6.5, 10])
