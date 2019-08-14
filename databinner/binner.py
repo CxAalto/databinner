@@ -838,7 +838,7 @@ class Bins(object):
                                         " with length at least 2.")
 
         bs_gen = bin_sum_gen()
-        bs_gen.next()
+        next(bs_gen)
         if data is None:
             return bs_gen
         else:
