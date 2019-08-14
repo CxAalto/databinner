@@ -4,7 +4,7 @@ from operator import itemgetter
 import binner
 import numpy # Used only for testing with numpy arrays.
 import warnings
-
+import sys
 
 class TestBins(unittest.TestCase):
     def setUp(self):
@@ -596,10 +596,10 @@ if __name__ == '__main__':
     # The if-clause below exists only for debugging; it makes it
     # easier to run only one test instead of all of them. All test
     # will be run when binner.py is executed.
-    if True:
+    if len(sys.argv) > 1:
         # Run only one test.
         suite = unittest.TestSuite()
-        suite.addTest(TestBins("test_Average"))
+        suite.addTest(TestBins(sys.argv[1]))
         #suite.addTest(TestBins2D("test_Average"))
         unittest.TextTestRunner().run(suite)
     else:
